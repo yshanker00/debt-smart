@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DebtService } from '../../services/debt';
 import {
   FormArray,
   FormBuilder,
@@ -30,14 +31,20 @@ export class DebtFormComponent {
 
   form!: FormGroup; // declare first, initialize later
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      debts: this.fb.array([]),
-      extraPayment: [0, [Validators.min(0)]]
-    });
+ constructor(
+  private fb: FormBuilder,
+  private debtService: DebtService
+) {
+  this.form = this.fb.group({
+    debts: this.fb.array([]),
+    extraPayment: [0, [Validators.min(0)]]
+  });
 
-    this.addDebt();
-  }
+  this.addDebt();
+}
+result: any = null;
+loading = false;
+
 
   get debts(): FormArray {
     return this.form.get('debts') as FormArray;
@@ -59,6 +66,21 @@ export class DebtFormComponent {
   }
 
   submit() {
-    console.log(this.form.value);
-  }
+  if (this.form.invalid) return;
+
+  this.loading = true;
+
+  this.debtService.calculate(this.form.value).subscribe({
+    next: (res) => {
+      this.result = res;
+      this.loading = false;
+      console.log('API Result:', res);
+    },
+    error: (err) => {
+      console.error('API Error', err);
+      this.loading = false;
+    }
+  });
+}
+
 }
