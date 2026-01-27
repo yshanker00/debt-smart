@@ -1,12 +1,9 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { Component } from '@angular/core';
+import { DebtFormComponent } from './components/debt-form/debt-form';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  standalone: true,
+  imports: [DebtFormComponent],
+  template: `<app-debt-form></app-debt-form>`
 })
-export class App {
-  protected readonly title = signal('debt-ui');
-}
+export class App {}

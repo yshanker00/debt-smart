@@ -1,0 +1,54 @@
+<h2>Debt Details</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+
+  <div formArrayName="debts">
+    <div *ngFor="let debt of debts.controls; let i = index" [formGroupName]="i">
+
+      <mat-card style="margin-bottom: 12px;">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Balance</mat-label>
+          <input matInput type="number" formControlName="balance">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Interest %</mat-label>
+          <input matInput type="number" formControlName="interestRate">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Min Payment</mat-label>
+          <input matInput type="number" formControlName="minimumPayment">
+        </mat-form-field>
+
+        <button mat-button color="warn" type="button" (click)="removeDebt(i)">
+          Remove
+        </button>
+      </mat-card>
+
+    </div>
+  </div>
+
+  <button mat-raised-button color="primary" type="button" (click)="addDebt()">
+    Add Debt
+  </button>
+
+  <br><br>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Extra Monthly Payment</mat-label>
+    <input matInput type="number" formControlName="extraPayment">
+  </mat-form-field>
+
+  <br><br>
+
+  <button mat-raised-button color="accent" type="submit">
+    Calculate
+  </button>
+
+</form>
