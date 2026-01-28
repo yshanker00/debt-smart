@@ -52,3 +52,24 @@
   </button>
 
 </form>
+<div *ngIf="loading" style="margin-top: 16px;">
+  <mat-card>
+    <p>Calculating...</p>
+  </mat-card>
+</div>
+
+<div *ngIf="result" style="margin-top: 24px; display: flex; gap: 16px; flex-wrap: wrap;">
+
+  <mat-card style="flex: 1; min-width: 280px;">
+    <h3>Snowball Strategy</h3>
+    <p><strong>Months to Debt Free:</strong> {{ result.snowball.monthsToDebtFree }}</p>
+    <p><strong>Total Interest:</strong> ${{ result.snowball.totalInterest }}</p>
+  </mat-card>
+
+  <mat-card style="flex: 1; min-width: 280px;">
+    <h3>Avalanche Strategy</h3>
+    <p><strong>Months to Debt Free:</strong> {{ result.avalanche.monthsToDebtFree }}</p>
+    <p><strong>Total Interest:</strong> ${{ result.avalanche.totalInterest }}</p>
+  </mat-card>
+
+</div>
