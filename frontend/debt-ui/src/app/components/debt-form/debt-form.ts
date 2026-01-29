@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DebtService } from '../../services/debt';
 import {
@@ -18,33 +18,33 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-debt-form',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
-    CommonModule
+    MatButtonModule
   ],
   templateUrl: './debt-form.html'
 })
 export class DebtFormComponent {
 
-  form!: FormGroup; // declare first, initialize later
+  form!: FormGroup;
+  result: any = null;
+  loading = false;
 
- constructor(
-  private fb: FormBuilder,
-  private debtService: DebtService
-) {
-  this.form = this.fb.group({
-    debts: this.fb.array([]),
-    extraPayment: [0, [Validators.min(0)]]
-  });
+  constructor(
+    private fb: FormBuilder,
+    private debtService: DebtService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.form = this.fb.group({
+      debts: this.fb.array([]),
+      extraPayment: [0, [Validators.min(0)]]
+    });
 
-  this.addDebt();
-}
-result: any = null;
-loading = false;
-
+    this.addDebt();
+  }
 
   get debts(): FormArray {
     return this.form.get('debts') as FormArray;
@@ -66,21 +66,40 @@ loading = false;
   }
 
   submit() {
-  if (this.form.invalid) return;
+    if (this.form.invalid || this.loading) return;
 
-  this.loading = true;
+    this.loading = true;
+    this.result = null;
 
-  this.debtService.calculate(this.form.value).subscribe({
-    next: (res) => {
-      this.result = res;
-      this.loading = false;
-      console.log('API Result:', res);
-    },
-    error: (err) => {
-      console.error('API Error', err);
-      this.loading = false;
-    }
-  });
-}
+    this.debtService.calculate(this.form.value).subscribe({
+      next: (res) => {
+        this.result = res;
+        this.loading = false;
+        this.cdr.detectChanges(); // ✅ single, clean trigger
+      },
+      error: (err) => {
+        console.error('API Error', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
+  bestStrategy(): 'snowball' | 'avalanche' | null {
+    if (!this.result) return null;
+
+    return this.result.snowball.totalInterest <
+      this.result.avalanche.totalInterest
+      ? 'snowball'
+      : 'avalanche';
+  }
+
+  interestDifference(): number {
+    if (!this.result) return 0;
+
+    return Math.abs(
+      this.result.snowball.totalInterest -
+      this.result.avalanche.totalInterest
+    );
+  }
 }

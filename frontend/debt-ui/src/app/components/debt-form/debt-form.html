@@ -1,3 +1,16 @@
+<mat-card
+  *ngIf="result"
+  [style.border]="bestStrategy() === 'snowball' ? '2px solid green' : ''"
+  style="flex: 1; min-width: 280px;"
+>
+  <h3>
+    Snowball Strategy
+    <span *ngIf="bestStrategy() === 'snowball'">✅ Recommended</span>
+  </h3>
+
+  <p><strong>Months to Debt Free:</strong> {{ result.snowball.monthsToDebtFree }}</p>
+  <p><strong>Total Interest:</strong> ${{ result.snowball.totalInterest }}</p>
+</mat-card>
 <h2>Debt Details</h2>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
@@ -47,16 +60,23 @@
 
   <br><br>
 
-  <button mat-raised-button color="accent" type="submit">
-    Calculate
+  <button
+    mat-raised-button
+    color="accent"
+    type="submit"
+    [disabled]="loading"
+  >
+    {{ loading ? 'Calculating…' : 'Calculate' }}
   </button>
 
 </form>
-<div *ngIf="loading" style="margin-top: 16px;">
-  <mat-card>
-    <p>Calculating...</p>
-  </mat-card>
-</div>
+
+<mat-card *ngIf="result && bestStrategy()" style="margin-top: 16px; background: #f5fff5;">
+  <p>
+    💡 <strong>{{ bestStrategy() | titlecase }}</strong> strategy saves you
+    <strong>${{ interestDifference() }}</strong> in interest compared to the other option.
+  </p>
+</mat-card>
 
 <div *ngIf="result" style="margin-top: 24px; display: flex; gap: 16px; flex-wrap: wrap;">
 
@@ -66,8 +86,16 @@
     <p><strong>Total Interest:</strong> ${{ result.snowball.totalInterest }}</p>
   </mat-card>
 
-  <mat-card style="flex: 1; min-width: 280px;">
-    <h3>Avalanche Strategy</h3>
+
+  <mat-card
+    [style.border]="bestStrategy() === 'avalanche' ? '2px solid green' : ''"
+    style="flex: 1; min-width: 280px;"
+  >
+    <h3>
+      Avalanche Strategy
+      <span *ngIf="bestStrategy() === 'avalanche'">✅ Recommended</span>
+    </h3>
+
     <p><strong>Months to Debt Free:</strong> {{ result.avalanche.monthsToDebtFree }}</p>
     <p><strong>Total Interest:</strong> ${{ result.avalanche.totalInterest }}</p>
   </mat-card>
