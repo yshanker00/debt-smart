@@ -1,84 +1,96 @@
-<mat-card
-  *ngIf="result"
-  [style.border]="bestStrategy() === 'snowball' ? '2px solid green' : ''"
-  style="flex: 1; min-width: 280px;"
->
+@if (result) {
+<mat-card [style.border]="bestStrategy() === 'snowball' ? '2px solid green' : ''" style="flex: 1; min-width: 280px;">
   <h3>
     Snowball Strategy
-    <span *ngIf="bestStrategy() === 'snowball'">✅ Recommended</span>
+    @if (bestStrategy() === 'snowball') {
+    <span>✅ Recommended</span>
+    }
   </h3>
 
   <p><strong>Months to Debt Free:</strong> {{ result.snowball.monthsToDebtFree }}</p>
   <p><strong>Total Interest:</strong> ${{ result.snowball.totalInterest }}</p>
 </mat-card>
+}
+
 <h2>Debt Details</h2>
 
-<form [formGroup]="form" (ngSubmit)="submit()">
+<form [formGroup]="form" (ngSubmit)="submit()" class="debt-form-container">
 
-  <div formArrayName="debts">
-    <div *ngFor="let debt of debts.controls; let i = index" [formGroupName]="i">
+  <div formArrayName="debts" class="debts-list">
+    @for (debt of debts.controls; track debt; let i = $index) {
+    <div [formGroupName]="i" class="debt-item-row">
 
-      <mat-card style="margin-bottom: 12px;">
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name">
-        </mat-form-field>
+      <mat-card class="debt-card">
+        <div class="debt-grid">
+          <mat-form-field appearance="outline" class="field-name">
+            <mat-label>Debt Name</mat-label>
+            <input matInput formControlName="name" placeholder="e.g. Visa">
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Balance</mat-label>
-          <input matInput type="number" formControlName="balance">
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="field-balance">
+            <mat-label>Balance</mat-label>
+            <span matPrefix>$&nbsp;</span>
+            <input matInput type="number" formControlName="balance" placeholder="0.00">
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Interest %</mat-label>
-          <input matInput type="number" formControlName="interestRate">
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="field-interest">
+            <mat-label>Interest</mat-label>
+            <span matSuffix>%</span>
+            <input matInput type="number" formControlName="interestRate" placeholder="0">
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Min Payment</mat-label>
-          <input matInput type="number" formControlName="minimumPayment">
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="field-payment">
+            <mat-label>Min Payment</mat-label>
+            <span matPrefix>$&nbsp;</span>
+            <input matInput type="number" formControlName="minimumPayment" placeholder="0.00">
+          </mat-form-field>
 
-        <button mat-button color="warn" type="button" (click)="removeDebt(i)">
-          Remove
-        </button>
+          <div class="action-col">
+            <button mat-button color="warn" type="button" (click)="removeDebt(i)" title="Remove Debt">
+              Delete
+            </button>
+          </div>
+        </div>
       </mat-card>
 
     </div>
+    }
   </div>
 
-  <button mat-raised-button color="primary" type="button" (click)="addDebt()">
-    Add Debt
-  </button>
+  <div class="form-actions">
+    <button mat-stroked-button color="primary" type="button" (click)="addDebt()">
+      + Add Another Debt
+    </button>
+  </div>
 
-  <br><br>
+  <div class="extra-payment-section">
+    <mat-form-field appearance="outline">
+      <mat-label>Extra Monthly Payment</mat-label>
+      <span matPrefix>$&nbsp;</span>
+      <input matInput type="number" formControlName="extraPayment">
+      <mat-hint>Amount you can pay above minimums</mat-hint>
+    </mat-form-field>
+  </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Extra Monthly Payment</mat-label>
-    <input matInput type="number" formControlName="extraPayment">
-  </mat-form-field>
-
-  <br><br>
-
-  <button
-    mat-raised-button
-    color="accent"
-    type="submit"
-    [disabled]="loading"
-  >
-    {{ loading ? 'Calculating' : 'Calculate' }}
-  </button>
+  <div class="submit-section">
+    <button mat-flat-button color="primary" type="submit" [disabled]="loading" class="calculate-btn">
+      {{ loading ? 'Calculating...' : 'Calculate Strategy' }}
+    </button>
+  </div>
 
 </form>
 
-<mat-card *ngIf="result && bestStrategy()" style="margin-top: 16px; background: #f5fff5;">
+@if (result && bestStrategy()) {
+<mat-card style="margin-top: 16px; background: #f5fff5;">
   <p>
     💡 <strong>{{ bestStrategy() | titlecase }}</strong> strategy saves you
     <strong>${{ interestDifference() }}</strong> in interest compared to the other option.
   </p>
 </mat-card>
+}
 
-<div *ngIf="result" style="margin-top: 24px; display: flex; gap: 16px; flex-wrap: wrap;">
+@if (result) {
+<div style="margin-top: 24px; display: flex; gap: 16px; flex-wrap: wrap;">
 
   <mat-card style="flex: 1; min-width: 280px;">
     <h3>Snowball Strategy</h3>
@@ -87,13 +99,12 @@
   </mat-card>
 
 
-  <mat-card
-    [style.border]="bestStrategy() === 'avalanche' ? '2px solid green' : ''"
-    style="flex: 1; min-width: 280px;"
-  >
+  <mat-card [style.border]="bestStrategy() === 'avalanche' ? '2px solid green' : ''" style="flex: 1; min-width: 280px;">
     <h3>
       Avalanche Strategy
-      <span *ngIf="bestStrategy() === 'avalanche'">✅ Recommended</span>
+      @if (bestStrategy() === 'avalanche') {
+      <span>✅ Recommended</span>
+      }
     </h3>
 
     <p><strong>Months to Debt Free:</strong> {{ result.avalanche.monthsToDebtFree }}</p>
@@ -101,3 +112,4 @@
   </mat-card>
 
 </div>
+}

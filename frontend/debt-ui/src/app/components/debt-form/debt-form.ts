@@ -25,11 +25,12 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatButtonModule
   ],
-  templateUrl: './debt-form.html'
+  templateUrl: './debt-form.html',
+  styleUrl: './debt-form.scss'
 })
 export class DebtFormComponent {
 
-  form!: FormGroup;
+  form: FormGroup;
   result: any = null;
   loading = false;
 
@@ -75,7 +76,7 @@ export class DebtFormComponent {
       next: (res) => {
         this.result = res;
         this.loading = false;
-        this.cdr.detectChanges(); // ✅ single, clean trigger
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('API Error', err);
