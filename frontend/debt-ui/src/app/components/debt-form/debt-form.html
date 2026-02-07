@@ -207,22 +207,24 @@
                   @if (isStrategyExpanded(strategy.name)) {
                     <div class="pros-cons-content">
                       <div class="pros-section">
-                        <strong style="display: flex; align-items: center; color: #43a047; font-size: 1.1rem; margin-bottom: 10px;">
-                          <mat-icon style="margin-right: 6px;">check_circle</mat-icon> Advantages
+                        <strong>
+                          <mat-icon>check_circle</mat-icon>
+                          <span>Advantages</span>
                         </strong>
-                        <ul style="padding-left: 24px; color: #555;">
+                        <ul>
                           @for (pro of strategy.pros; track $index) {
-                            <li style="margin: 8px 0;">{{ pro }}</li>
+                            <li>{{ pro }}</li>
                           }
                         </ul>
                       </div>
-                      <div class="cons-section" style="margin-top: 20px;">
-                        <strong style="display: flex; align-items: center; color: #f44336; font-size: 1.1rem; margin-bottom: 10px;">
-                          <mat-icon style="margin-right: 6px;">warning</mat-icon> Considerations
+                      <div class="cons-section">
+                        <strong>
+                          <mat-icon>warning</mat-icon>
+                          <span>Considerations</span>
                         </strong>
-                        <ul style="padding-left: 24px; color: #555;">
+                        <ul>
                           @for (con of strategy.cons; track $index) {
-                            <li style="margin: 8px 0;">{{ con }}</li>
+                            <li>{{ con }}</li>
                           }
                         </ul>
                       </div>

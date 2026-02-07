@@ -442,6 +442,93 @@
       border-left: 4px solid #1976d2;
     }
 
+    .pros-cons-collapsible {
+      margin-top: 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+
+      .pros-cons-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px;
+        background: #f5f5f5;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+          background: #eeeeee;
+        }
+
+        mat-icon:first-child {
+          color: #1a237e;
+        }
+
+        span {
+          flex: 1;
+          font-weight: 600;
+          color: #1a237e;
+          font-size: 1rem;
+        }
+
+        .expand-icon {
+          color: #666;
+        }
+      }
+
+      .pros-cons-content {
+        padding: 24px;
+        background: #fafafa;
+
+        .pros-section,
+        .cons-section {
+          margin-bottom: 20px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          strong {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+
+            mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+
+        .pros-section strong {
+          color: #43a047;
+        }
+
+        .cons-section {
+          margin-top: 20px;
+
+          strong {
+            color: #f44336;
+          }
+        }
+
+        ul {
+          margin: 0;
+          padding-left: 24px;
+          color: #555;
+
+          li {
+            margin: 8px 0;
+            line-height: 1.5;
+          }
+        }
+      }
+    }
+
     mat-expansion-panel {
       margin-top: 16px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -459,47 +546,204 @@
           margin-right: 8px;
         }
       }
+    }
+  }
+}
 
-      .pros-cons-content {
-        padding: 24px;
+// Mobile responsive styles
+@media (max-width: 768px) {
+  .debt-form-container {
+    padding: 16px;
+  }
 
-        .pros-section,
-        .cons-section {
-          margin-bottom: 20px;
+  // Unified heading styles for mobile
+  h1, h2, h3, h4,
+  .section-title,
+  .header-section h1,
+  .other-strategies-section h2 {
+    line-height: 1.3 !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
 
-          &:last-child {
-            margin-bottom: 0;
-          }
+  .header-section {
+    margin-bottom: 24px;
 
-          strong {
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+    h1 {
+      font-size: 1.8rem;
+    }
 
-            mat-icon {
-              margin-right: 6px;
-            }
-          }
+    p {
+      font-size: 1rem;
+    }
+  }
 
-          &.pros-section strong {
-            color: #43a047;
-          }
+  .section-title {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
 
-          &.cons-section strong {
-            color: #f44336;
-          }
+    &.centered {
+      margin: 32px 0 16px 0;
+    }
+  }
 
-          ul {
-            margin: 0;
-            padding-left: 24px;
-            color: #555;
+  // Additional strategies heading
+  .other-strategies-section {
+    padding: 16px;
 
-            li {
-              margin: 8px 0;
-              line-height: 1.5;
-            }
-          }
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 20px;
+    }
+  }
+
+  .debt-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .action-buttons-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+
+    .extra-payment-field {
+      max-width: 100%;
+      min-width: 100%;
+    }
+
+    .add-debt-btn,
+    .load-example-btn,
+    .calculate-btn {
+      width: 100%;
+    }
+  }
+
+  .strategy-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .strategy-card {
+    padding: 20px;
+
+    h3 {
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      gap: 8px;
+
+      .recommended-badge,
+      .not-recommended-badge {
+        font-size: 0.85rem;
+        padding: 4px 12px;
+        width: 100%;
+        text-align: center;
+        margin-top: 8px;
+      }
+    }
+
+    .stats-box {
+      padding: 20px;
+
+      p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+
+        strong {
+          font-size: 1rem;
+        }
+
+        .stat-value {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .other-strategies-section {
+    padding: 16px;
+
+    h2 {
+      font-size: 1.3rem;
+      line-height: 1.3;
+      word-break: break-word;
+      margin-bottom: 20px;
+    }
+  }
+
+  .other-strategies-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .other-strategy-card {
+    padding: 16px;
+
+    h4 {
+      font-size: 1.1rem;
+      line-height: 1.3;
+    }
+
+    .strategy-icon {
+      font-size: 2rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  // Unified heading styles for small mobile
+  h1, h2, h3, h4,
+  .section-title,
+  .header-section h1,
+  .other-strategies-section h2 {
+    line-height: 1.4 !important;
+  }
+
+  .header-section {
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .other-strategies-section {
+    padding: 12px;
+
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+    }
+  }
+
+  .strategy-card {
+    padding: 16px;
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    .stats-box {
+      padding: 16px;
+
+      p {
+        padding: 8px 0;
+
+        strong {
+          font-size: 0.95rem;
+        }
+
+        .stat-value {
+          font-size: 1.3rem;
         }
       }
     }

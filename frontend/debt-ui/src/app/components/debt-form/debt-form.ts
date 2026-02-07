@@ -123,13 +123,14 @@ export class DebtFormComponent {
 
     this.loading = true;
     this.result = null;
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
 
     this.debtService.calculate(this.form.value).subscribe({
       next: (res) => {
         this.result = res;
         this.loading = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
+        setTimeout(() => this.cdr.detectChanges(), 0);
       },
       error: (err) => {
         console.error('API Error:', err);
@@ -144,7 +145,8 @@ export class DebtFormComponent {
         alert(errorMessage);
         this.loading = false;
         this.result = null;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
+        setTimeout(() => this.cdr.detectChanges(), 0);
       }
     });
   }
