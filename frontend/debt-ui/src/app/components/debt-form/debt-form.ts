@@ -34,7 +34,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatTabsModule
   ],
   templateUrl: './debt-form.html',
-  styleUrl: './debt-form.scss'
+  styleUrl: './debt-form.component.scss'
 })
 export class DebtFormComponent {
 
