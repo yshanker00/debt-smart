@@ -9,6 +9,7 @@ export function calculatePayoff(
 ) {
   let month = 0;
   let totalInterest = 0;
+  let totalPaid = 0;
 
   const remaining = debts.map(d => ({ ...d }));
 
@@ -18,32 +19,51 @@ export function calculatePayoff(
     remaining.sort((a, b) => b.interestRate - a.interestRate);
   }
 
-  while (remaining.some(d => d.balance > 0) && month < 600) {
+  while (remaining.some(d => d.balance > 0.01) && month < 600) {
     month++;
 
+    // Apply interest first
     for (const debt of remaining) {
-      if (debt.balance <= 0) continue;
-
-      const monthlyRate = debt.interestRate / 100 / 12;
-      const interest = debt.balance * monthlyRate;
-      totalInterest += interest;
-
-      debt.balance += interest;
-      debt.balance -= debt.minimumPayment;
-
-      if (debt.balance < 0) debt.balance = 0;
+      if (debt.balance > 0) {
+        const monthlyRate = debt.interestRate / 100 / 12;
+        const interest = debt.balance * monthlyRate;
+        debt.balance += interest;
+        totalInterest += interest;
+      }
     }
 
-    const target = remaining.find(d => d.balance > 0);
-    if (target) {
-      target.balance -= extraPayment;
-      if (target.balance < 0) target.balance = 0;
+    // Pay minimum payments on all debts
+    for (const debt of remaining) {
+      if (debt.balance > 0) {
+        const payment = Math.min(debt.minimumPayment, debt.balance);
+        debt.balance -= payment;
+        totalPaid += payment;
+        
+        if (debt.balance < 0.01) debt.balance = 0;
+      }
+    }
+
+    // Apply extra payment to first debt with balance
+    let remainingExtra = extraPayment;
+    for (const debt of remaining) {
+      if (debt.balance > 0 && remainingExtra > 0) {
+        const extraAmount = Math.min(remainingExtra, debt.balance);
+        debt.balance -= extraAmount;
+        totalPaid += extraAmount;
+        remainingExtra -= extraAmount;
+        
+        if (debt.balance < 0.01) debt.balance = 0;
+        break; // Only pay extra to first priority debt
+      }
     }
   }
 
-  return {
+  const result = {
     strategy,
     monthsToDebtFree: month,
-    totalInterest: Number(totalInterest.toFixed(2))
+    totalInterest: Math.round(totalInterest * 100) / 100,
+    totalPaid: Math.round(totalPaid * 100) / 100
   };
+  
+  return result;
 }

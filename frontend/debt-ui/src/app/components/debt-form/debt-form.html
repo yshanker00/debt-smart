@@ -1,103 +1,240 @@
-<mat-card
-  *ngIf="result"
-  [style.border]="bestStrategy() === 'snowball' ? '2px solid green' : ''"
-  style="flex: 1; min-width: 280px;"
->
-  <h3>
-    Snowball Strategy
-    <span *ngIf="bestStrategy() === 'snowball'">✅ Recommended</span>
-  </h3>
-
-  <p><strong>Months to Debt Free:</strong> {{ result.snowball.monthsToDebtFree }}</p>
-  <p><strong>Total Interest:</strong> ${{ result.snowball.totalInterest }}</p>
-</mat-card>
-<h2>Debt Details</h2>
-
-<form [formGroup]="form" (ngSubmit)="submit()">
-
-  <div formArrayName="debts">
-    <div *ngFor="let debt of debts.controls; let i = index" [formGroupName]="i">
-
-      <mat-card style="margin-bottom: 12px;">
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Balance</mat-label>
-          <input matInput type="number" formControlName="balance">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Interest %</mat-label>
-          <input matInput type="number" formControlName="interestRate">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Min Payment</mat-label>
-          <input matInput type="number" formControlName="minimumPayment">
-        </mat-form-field>
-
-        <button mat-button color="warn" type="button" (click)="removeDebt(i)">
-          Remove
-        </button>
-      </mat-card>
-
-    </div>
+<div class="debt-form-container">
+  
+  <div class="header-section">
+    <h1>💰 DebtSmart Calculator</h1>
+    <p>Smart strategies to become debt-free faster</p>
   </div>
 
-  <button mat-raised-button color="primary" type="button" (click)="addDebt()">
-    Add Debt
-  </button>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h2 class="section-title">📋 Your Debts</h2>
 
-  <br><br>
+    <div formArrayName="debts" class="debt-cards-grid">
+      @for (debt of debts.controls; track $index; let i = $index) {
+        <div [formGroupName]="i">
+          <mat-card class="debt-card">
+            <div class="card-header">
+              <strong>Debt #{{ i + 1 }}</strong>
+              <button mat-icon-button color="warn" type="button" (click)="removeDebt(i)" aria-label="Remove Debt">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Debt Name</mat-label>
+              <input matInput formControlName="name" placeholder="e.g., Credit Card, Car Loan">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Balance ($)</mat-label>
+              <input matInput type="number" formControlName="balance" placeholder="0.00">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Interest Rate (%)</mat-label>
+              <input matInput type="number" formControlName="interestRate" placeholder="0.0">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Minimum Payment ($)</mat-label>
+              <input matInput type="number" formControlName="minimumPayment" placeholder="0.00">
+            </mat-form-field>
+          </mat-card>
+        </div>
+      }
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Extra Monthly Payment</mat-label>
-    <input matInput type="number" formControlName="extraPayment">
-  </mat-form-field>
+    <div class="action-buttons-row">
+      <button mat-raised-button color="primary" type="button" (click)="addDebt()" class="add-debt-btn">
+        <mat-icon>add_circle</mat-icon> Add Another Debt
+      </button>
+      
+      <button mat-stroked-button color="accent" type="button" (click)="loadExampleDebts()" class="add-debt-btn">
+        <mat-icon>lightbulb</mat-icon> Load Example
+      </button>
 
-  <br><br>
+      <mat-form-field appearance="outline" class="extra-payment-field">
+        <mat-label>Extra Monthly Payment ($)</mat-label>
+        <input matInput type="number" formControlName="extraPayment" placeholder="0.00">
+        <mat-icon matPrefix>payments</mat-icon>
+      </mat-form-field>
 
-  <button
-    mat-raised-button
-    color="accent"
-    type="submit"
-    [disabled]="loading"
-  >
-    {{ loading ? 'Calculating' : 'Calculate' }}
-  </button>
+      <button mat-raised-button color="accent" type="button" (click)="submit()" [disabled]="loading" class="calculate-btn">
+        <mat-icon>{{ loading ? 'hourglass_empty' : 'calculate' }}</mat-icon>
+        {{ loading ? 'Calculating...' : 'Calculate Payoff' }}
+      </button>
+    </div>
+  </form>
 
-</form>
+  <!-- Recommendations Section -->
+  @if (result && getRecommendations().length > 0) {
+    <mat-card class="recommendations-card">
+      <h3>
+        <mat-icon>lightbulb</mat-icon>
+        Smart Recommendations
+      </h3>
+      @for (rec of getRecommendations(); track $index; let last = $last) {
+        <div class="recommendation-item" [class.last]="last">
+          <p>{{ rec }}</p>
+        </div>
+      }
+    </mat-card>
+  }
 
-<mat-card *ngIf="result && bestStrategy()" style="margin-top: 16px; background: #f5fff5;">
-  <p>
-    💡 <strong>{{ bestStrategy() | titlecase }}</strong> strategy saves you
-    <strong>${{ interestDifference() }}</strong> in interest compared to the other option.
-  </p>
-</mat-card>
+  <!-- Best Strategy Summary -->
+  @if (result && bestStrategy()) {
+    <mat-card class="best-strategy-card">
+      <p>
+        <strong>🎯 {{ bestStrategy() | titlecase }} Strategy</strong> is your best choice!<br>
+        <span>Save <strong class="savings">${{ interestDifference() | number:'1.0-2' }}</strong> in interest compared to the other method.</span>
+      </p>
+    </mat-card>
+  }
 
-<div *ngIf="result" style="margin-top: 24px; display: flex; gap: 16px; flex-wrap: wrap;">
+  <!-- Primary Strategy Results -->
+  @if (result) {
+    <div>
+      <h2 class="section-title centered">📊 Payoff Strategies Comparison</h2>
 
-  <mat-card style="flex: 1; min-width: 280px;">
-    <h3>Snowball Strategy</h3>
-    <p><strong>Months to Debt Free:</strong> {{ result.snowball.monthsToDebtFree }}</p>
-    <p><strong>Total Interest:</strong> ${{ result.snowball.totalInterest }}</p>
-  </mat-card>
+      <div class="strategy-grid">
+        <mat-card class="strategy-card" [class.recommended]="bestStrategy() === 'snowball'" [class.not-recommended]="bestStrategy() !== 'snowball'">
+          <h3>
+            ⛄ Snowball Strategy
+            @if (bestStrategy() === 'snowball') {
+              <span class="recommended-badge">✅ Recommended</span>
+            }
+          </h3>
+          <div class="stats-box">
+            <p>
+              <strong>Months to Debt Free:</strong> 
+              <span class="stat-value positive">{{ result.snowball.monthsToDebtFree }}</span>
+            </p>
+            <p>
+              <strong>Total Interest:</strong> 
+              <span class="stat-value negative">${{ result.snowball.totalInterest | number:'1.0-2' }}</span>
+            </p>
+          </div>
+          
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>format_list_numbered</mat-icon>
+                Payment Order
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="payment-order-content">
+              @for (debt of getSnowballOrder(); track $index; let last = $last) {
+                <div class="payment-item" [class.last]="last">
+                  <div class="payment-header">
+                    <strong>{{ debt.order }}. {{ debt.name }}</strong>
+                    <span class="balance">${{ debt.balance | number:'1.0-2' }}</span>
+                  </div>
+                  <div class="payment-reason">{{ debt.reason }}</div>
+                </div>
+              }
+            </div>
+          </mat-expansion-panel>
+        </mat-card>
 
+        <mat-card class="strategy-card" [class.recommended]="bestStrategy() === 'avalanche'" [class.not-recommended]="bestStrategy() !== 'avalanche'">
+          <h3>
+            🏔️ Avalanche Strategy
+            @if (bestStrategy() === 'avalanche') {
+              <span class="recommended-badge">✅ Recommended</span>
+            }
+          </h3>
+          <div class="stats-box">
+            <p>
+              <strong>Months to Debt Free:</strong> 
+              <span class="stat-value positive">{{ result.avalanche.monthsToDebtFree }}</span>
+            </p>
+            <p>
+              <strong>Total Interest:</strong> 
+              <span class="stat-value negative">${{ result.avalanche.totalInterest | number:'1.0-2' }}</span>
+            </p>
+          </div>
+          
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>format_list_numbered</mat-icon>
+                Payment Order
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="payment-order-content">
+              @for (debt of getAvalancheOrder(); track $index; let last = $last) {
+                <div class="payment-item" [class.last]="last">
+                  <div class="payment-header">
+                    <strong>{{ debt.order }}. {{ debt.name }}</strong>
+                    <span class="interest">{{ debt.interestRate }}% APR</span>
+                  </div>
+                  <div class="payment-reason">{{ debt.reason }}</div>
+                </div>
+              }
+            </div>
+          </mat-expansion-panel>
+        </mat-card>
+      </div>
 
-  <mat-card
-    [style.border]="bestStrategy() === 'avalanche' ? '2px solid green' : ''"
-    style="flex: 1; min-width: 280px;"
-  >
-    <h3>
-      Avalanche Strategy
-      <span *ngIf="bestStrategy() === 'avalanche'">✅ Recommended</span>
-    </h3>
+      <!-- Other Strategies Button -->
+      <div class="other-strategies-section">
+        <button mat-raised-button color="primary" (click)="toggleOtherStrategies()">
+          <mat-icon>{{ showOtherStrategies ? 'expand_less' : 'expand_more' }}</mat-icon>
+          {{ showOtherStrategies ? 'Hide' : 'Explore' }} Other Strategies
+        </button>
+      </div>
 
-    <p><strong>Months to Debt Free:</strong> {{ result.avalanche.monthsToDebtFree }}</p>
-    <p><strong>Total Interest:</strong> ${{ result.avalanche.totalInterest }}</p>
-  </mat-card>
+      <!-- Other Strategies Section -->
+      @if (showOtherStrategies) {
+        <div class="other-strategies-content">
+          <h2>📚 Additional Debt Payoff Strategies</h2>
+          
+          <div class="other-strategies-grid">
+            @for (strategy of getOtherStrategies(); track strategy.name) {
+              <mat-card class="strategy-detail-card">
+                <h3>
+                  <span class="strategy-icon">{{ strategy.icon }}</span>
+                  {{ strategy.name }}
+                </h3>
+                
+                <p><strong>📝 Description:</strong> {{ strategy.description }}</p>
+                <p><strong>⚙️ Method:</strong> {{ strategy.method }}</p>
+                <p class="best-for-box">
+                  <strong>✅ Best for:</strong> {{ strategy.bestFor }}
+                </p>
+                
+                <div class="pros-cons-collapsible">
+                  <div class="pros-cons-header" (click)="toggleStrategy(strategy.name)">
+                    <mat-icon>balance</mat-icon>
+                    <span>Pros & Cons</span>
+                    <mat-icon class="expand-icon">{{ isStrategyExpanded(strategy.name) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  </div>
+                  @if (isStrategyExpanded(strategy.name)) {
+                    <div class="pros-cons-content">
+                      <div class="pros-section">
+                        <strong style="display: flex; align-items: center; color: #43a047; font-size: 1.1rem; margin-bottom: 10px;">
+                          <mat-icon style="margin-right: 6px;">check_circle</mat-icon> Advantages
+                        </strong>
+                        <ul style="padding-left: 24px; color: #555;">
+                          @for (pro of strategy.pros; track $index) {
+                            <li style="margin: 8px 0;">{{ pro }}</li>
+                          }
+                        </ul>
+                      </div>
+                      <div class="cons-section" style="margin-top: 20px;">
+                        <strong style="display: flex; align-items: center; color: #f44336; font-size: 1.1rem; margin-bottom: 10px;">
+                          <mat-icon style="margin-right: 6px;">warning</mat-icon> Considerations
+                        </strong>
+                        <ul style="padding-left: 24px; color: #555;">
+                          @for (con of strategy.cons; track $index) {
+                            <li style="margin: 8px 0;">{{ con }}</li>
+                          }
+                        </ul>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </mat-card>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
 
 </div>
