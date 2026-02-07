@@ -1,536 +1,88 @@
-// Main container
 .debt-form-container {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 1400px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 24px;
+  font-family: 'Inter', sans-serif;
 }
 
-// Header section
-.header-section {
-  text-align: center;
-  margin-bottom: 40px;
-
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
-    color: #1a237e;
-    margin-bottom: 8px;
-  }
-
-  p {
-    font-size: 1.1rem;
-    color: #666;
-    margin: 0;
-  }
-}
-
-// Section titles
-.section-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
+.debts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 3px solid #1a237e;
-
-  &.centered {
-    margin: 48px 0 24px 0;
-    text-align: center;
-  }
 }
 
-// Debt cards grid
-.debt-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
+.debt-item-row {
+  width: 100%;
 }
 
 .debt-card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-  border-radius: 12px !important;
-  transition: transform 0.2s, box-shadow 0.2s;
-  padding: 20px !important;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #f0f0f0;
-
-    strong {
-      font-size: 1.2rem;
-      color: #1a237e;
-    }
-
-    button {
-      transition: transform 0.2s;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-  }
-
-  ::ng-deep mat-form-field {
-    width: 100%;
-    margin-bottom: 8px;
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-  }
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: #ffffff;
 }
 
-// Action buttons row
-.action-buttons-row {
-  display: flex;
+.debt-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr auto;
   gap: 16px;
-  flex-wrap: wrap;
   align-items: center;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    
+    .field-name {
+      grid-column: 1 / -1;
+    }
+    
+    .action-col {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
+
+.action-col {
+  display: flex;
+  justify-content: center;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
   margin-bottom: 32px;
+}
 
-  .add-debt-btn {
-    font-size: 1rem;
-    padding: 0 24px;
-    height: 48px;
-    border-radius: 24px;
-    font-weight: 500;
-
-    mat-icon {
-      margin-right: 8px;
-    }
+.extra-payment-section {
+  max-width: 400px;
+  margin: 0 auto 32px;
+  
+  mat-form-field {
+    width: 100%;
   }
+}
 
-  .extra-payment-field {
-    flex: 1;
-    min-width: 280px;
-    max-width: 400px;
-
-    ::ng-deep mat-icon {
-      margin-right: 8px;
-      color: #43a047;
-    }
-  }
-
+.submit-section {
+  display: flex;
+  justify-content: center;
+  
   .calculate-btn {
+    padding: 24px 48px;
     font-size: 1.1rem;
-    padding: 0 32px;
-    height: 56px;
-    border-radius: 28px;
-    font-weight: 600;
-    min-width: 180px;
-
-    mat-icon {
-      margin-right: 8px;
-    }
+    border-radius: 50px;
   }
 }
 
-// Recommendations card
-.recommendations-card {
-  margin: 32px 0;
-  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%) !important;
-  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.25) !important;
-  border-radius: 16px !important;
-  padding: 28px !important;
-  border-left: 6px solid #ff9800;
-
-  h3 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: #e65100;
-    margin: 0 0 20px 0;
-    display: flex;
-    align-items: center;
-
-    mat-icon {
-      margin-right: 12px;
-      font-size: 2rem;
-      width: 32px;
-      height: 32px;
-    }
-  }
-
-  .recommendation-item {
-    padding: 14px 0;
-
-    &:not(.last) {
-      border-bottom: 1px solid rgba(230, 81, 0, 0.1);
-    }
-
-    p {
-      margin: 0;
-      line-height: 1.7;
-      font-size: 1.05rem;
-      color: #424242;
-    }
-  }
+mat-form-field {
+  width: 100%;
 }
 
-// Best strategy summary
-.best-strategy-card {
-  margin: 32px 0;
-  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
-  box-shadow: 0 6px 20px rgba(67, 160, 71, 0.25) !important;
-  border-radius: 16px !important;
-  padding: 24px !important;
-  border-left: 6px solid #43a047;
-
-  p {
-    margin: 0;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: #1b5e20;
-
-    strong {
-      font-size: 1.4rem;
-
-      &.savings {
-        font-size: 1.3rem;
-        color: #1b5e20;
-      }
-    }
-
-    span {
-      font-size: 1.1rem;
-      color: #2e7d32;
-    }
-  }
+/* Make inputs look a bit cleaner */
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none; /* Hide hint wrapper if empty to save space, or handle hints carefully */
 }
 
-// Strategy comparison grid
-.strategy-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 24px;
-  margin-bottom: 40px;
-}
-
-.strategy-card {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
-  border-radius: 16px !important;
-  padding: 28px !important;
-  transition: transform 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18) !important;
-  }
-
-  &.recommended {
-    border: 3px solid #43a047 !important;
-  }
-
-  &.not-recommended {
-    border: 1px solid #e0e0e0 !important;
-  }
-
-  h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1a237e;
-    margin: 0 0 20px 0;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-
-    .recommended-badge {
-      background: #43a047;
-      color: #fff;
-      border-radius: 20px;
-      padding: 6px 16px;
-      font-size: 0.8rem;
-      margin-left: 12px;
-      font-weight: 600;
-      box-shadow: 0 2px 8px rgba(67, 160, 71, 0.4);
-    }
-  }
-
-  .stats-box {
-    background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
-    border-radius: 12px;
-    padding: 28px;
-    margin-bottom: 20px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-
-    p {
-      margin: 0 0 20px 0;
-      font-size: 1rem;
-      color: #424242;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-
-      &:last-child {
-        margin-bottom: 0;
-        border-bottom: none;
-      }
-
-      strong {
-        color: #1a237e;
-        font-size: 1.1rem;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-      }
-
-      .stat-value {
-        font-size: 2rem;
-        font-weight: 700;
-        font-family: 'Segoe UI', Arial, sans-serif;
-        letter-spacing: -0.5px;
-
-        &.positive {
-          color: #43a047;
-          text-shadow: 0 1px 2px rgba(67, 160, 71, 0.2);
-        }
-
-        &.negative {
-          color: #f44336;
-          text-shadow: 0 1px 2px rgba(244, 67, 54, 0.2);
-        }
-      }
-    }
-  }
-
-  ::ng-deep mat-expansion-panel {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border-radius: 8px;
-
-    mat-expansion-panel-header {
-      border-radius: 8px;
-    }
-
-    mat-panel-title {
-      font-weight: 600;
-      color: #1a237e;
-
-      mat-icon {
-        margin-right: 8px;
-      }
-    }
-
-    .payment-order-content {
-      padding: 20px;
-
-      .payment-item {
-        padding: 16px 0;
-
-        &:not(.last) {
-          border-bottom: 1px solid #e0e0e0;
-        }
-
-        .payment-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 8px;
-
-          strong {
-            font-size: 1.1rem;
-            color: #333;
-          }
-
-          .balance {
-            color: #43a047;
-            font-weight: 600;
-            font-size: 1.2rem;
-          }
-
-          .interest {
-            color: #f44336;
-            font-weight: 600;
-            font-size: 1.2rem;
-          }
-        }
-
-        .payment-reason {
-          font-size: 0.95rem;
-          color: #666;
-          font-style: italic;
-        }
-      }
-    }
-  }
-}
-
-// Other strategies section
-.other-strategies-section {
-  text-align: center;
-  margin: 48px 0 32px 0;
-
-  button {
-    font-size: 1.1rem;
-    padding: 0 32px;
-    height: 56px;
-    border-radius: 28px;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
-    transition: all 0.3s;
-
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(26, 35, 126, 0.4);
-    }
-
-    mat-icon {
-      margin-right: 8px;
-    }
-  }
-}
-
-.other-strategies-content {
-  margin-top: 32px;
-
-  h2 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #333;
-    text-align: center;
-    margin-bottom: 32px;
-  }
-}
-
-.other-strategies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-
-  .strategy-detail-card {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
-    border-radius: 16px !important;
-    padding: 28px !important;
-    transition: transform 0.3s, box-shadow 0.3s;
-
-    &:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15) !important;
-    }
-
-    h3 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #1a237e;
-      margin: 0 0 16px 0;
-      display: flex;
-      align-items: center;
-
-      .strategy-icon {
-        font-size: 2rem;
-        margin-right: 12px;
-      }
-    }
-
-    p {
-      color: #555;
-      margin: 12px 0;
-      line-height: 1.6;
-    }
-
-    .best-for-box {
-      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-      padding: 14px;
-      border-radius: 10px;
-      margin: 16px 0;
-      font-weight: 500;
-      color: #0d47a1;
-      border-left: 4px solid #1976d2;
-    }
-
-    .pros-cons-collapsible {
-      margin-top: 16px;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      overflow: hidden;
-
-      .pros-cons-header {
-        display: flex;
-        align-items: center;
-        padding: 16px;
-        background: #f5f5f5;
-        cursor: pointer;
-        transition: background 0.2s;
-        font-weight: 600;
-        color: #1a237e;
-
-        &:hover {
-          background: #eeeeee;
-        }
-
-        mat-icon:first-child {
-          margin-right: 8px;
-        }
-
-        span {
-          flex: 1;
-        }
-
-        .expand-icon {
-          color: #666;
-        }
-      }
-
-      .pros-cons-content {
-        padding: 20px;
-        background: white;
-        border-top: 1px solid #e0e0e0;
-      }
-    }
-
-    .pros-cons-content {
-      padding: 24px;
-
-      .pros-section,
-      .cons-section {
-        margin-bottom: 20px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-
-      .pros-title,
-      .cons-title {
-        font-size: 1.1rem;
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-
-        mat-icon {
-          margin-right: 6px;
-        }
-      }
-
-      .pros-title {
-        color: #43a047;
-      }
-
-      .cons-title {
-        color: #f44336;
-      }
-
-      .pros-list,
-      .cons-list {
-        margin: 0;
-        padding-left: 24px;
-        color: #555;
-
-        li {
-          margin: 8px 0;
-          line-height: 1.5;
-        }
-      }
-    }
-  }
-}
+/* Re-enable helper text space only when needed if you use hints aggressively, 
+   but for this "clean" look, often removing the reserved space helps alignment */

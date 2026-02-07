@@ -38,7 +38,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 })
 export class DebtFormComponent {
 
-  form!: FormGroup;
+  form: FormGroup;
   result: any = null;
   loading = false;
   showOtherStrategies = false;
@@ -129,12 +129,7 @@ export class DebtFormComponent {
       next: (res) => {
         this.result = res;
         this.loading = false;
-        this.cdr.markForCheck();
-        
-        // Force change detection after state update
-        setTimeout(() => {
-          this.cdr.detectChanges();
-        }, 0);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('API Error:', err);
