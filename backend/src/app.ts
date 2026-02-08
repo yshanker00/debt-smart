@@ -10,6 +10,17 @@ app.use(cors());
 // Parse JSON body
 app.use(express.json());
 
+// Root endpoint
+app.get('/', (_req, res) => {
+  res.json({ 
+    message: 'DebtSmart API is running',
+    endpoints: {
+      health: '/health',
+      calculate: '/calculate (POST)'
+    }
+  });
+});
+
 // Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
