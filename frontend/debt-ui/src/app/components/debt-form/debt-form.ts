@@ -73,31 +73,25 @@ export class DebtFormComponent {
   }
 
   loadExampleDebts() {
-    // Clear existing debts
-    while (this.debts.length > 0) {
-      this.debts.removeAt(0);
-    }
-    
-    // Add example debts that show different strategies
     const examples = [
       { name: 'Student Loan', balance: 3000, interestRate: 6, minimumPayment: 100 },
       { name: 'Credit Card', balance: 8000, interestRate: 22, minimumPayment: 200 },
       { name: 'Car Loan', balance: 12000, interestRate: 5, minimumPayment: 300 }
     ];
-    
-    examples.forEach(example => {
-      this.debts.push(
-        this.fb.group({
-          name: [example.name, Validators.required],
-          balance: [example.balance, [Validators.required, Validators.min(0)]],
-          interestRate: [example.interestRate, [Validators.required, Validators.min(0)]],
-          minimumPayment: [example.minimumPayment, [Validators.required, Validators.min(0)]]
-        })
-      );
-    });
-    
+
+    const exampleFormGroups = examples.map(example =>
+      this.fb.group({
+        name: [example.name, Validators.required],
+        balance: [example.balance, [Validators.required, Validators.min(0)]],
+        interestRate: [example.interestRate, [Validators.required, Validators.min(0)]],
+        minimumPayment: [example.minimumPayment, [Validators.required, Validators.min(0)]]
+      })
+    );
+
+    this.form.setControl('debts', this.fb.array(exampleFormGroups));
     this.form.patchValue({ extraPayment: 50 });
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
+    setTimeout(() => this.cdr.detectChanges(), 0);
   }
 
   removeDebt(index: number) {

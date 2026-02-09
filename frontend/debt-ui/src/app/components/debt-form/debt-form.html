@@ -9,7 +9,7 @@
     <h2 class="section-title">📋 Your Debts</h2>
 
     <div formArrayName="debts" class="debt-cards-grid">
-      @for (debt of debts.controls; track $index; let i = $index) {
+      @for (debt of debts.controls; track debt; let i = $index) {
         <div [formGroupName]="i">
           <mat-card class="debt-card">
             <div class="card-header">
