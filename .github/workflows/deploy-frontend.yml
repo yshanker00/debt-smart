@@ -33,7 +33,7 @@ jobs:
 
       - name: Build for production
         working-directory: frontend/debt-ui
-        run: npm run build -- --base-href=/debt-smart/
+        run: npm run build -- --base-href=/debt-smart/ --configuration=production
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
